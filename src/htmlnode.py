@@ -11,10 +11,19 @@ class HTMLNode:
         self.children = children
         self.props = props
 
+    # Add a 'to_html' method For now, it should just raise a NotImplenentedError. Child classes will override this method to render themselves as HTML
+    def to_html(self):
+        raise NotImplementedError("To be used by child classes")
+    
+
     # Add a self.props_to_html() function. It should return a string representing the HTML attributes of the node. For example:
     #` {"href": "https://www.google.com", "target": "_blank"}
     #` Should become this:  href="https://www.google.com" target="_blank"
     def props_to_html(self):
+        if not self.props:
+            return ''
+        if not isinstance(self.props, dict):
+            raise Exception("The props need to be passed as a dictionary")
         result = ''.join(f' {prop}="{self.props[prop]}"' for prop in self.props)
         return result
 
@@ -25,10 +34,13 @@ class HTMLNode:
     # Create some tests for the HTMLNode, make them in a new file if you'd like.
 
 
-test = {"href": "https://www.google.com", "target": "_blank"}
+def debug():
+    test = ()
 
-node = HTMLNode("p", "some text", None, test)
-print(node)
+    node = HTMLNode("p", "some text", None, test)
+    print(node)
+if __name__== "__main__":
+    debug()
 
 
 # Todo create a file tomorrow and run unittests

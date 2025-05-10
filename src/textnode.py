@@ -35,10 +35,24 @@ class TextNode:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
     
 
-    
+# Todo working here
+def text_node_to_html_node(text_node):
+    match text_node.text_type:
+        case TextType.TEXT:
+            pass
+
+
+
+# debug 
 def main():
-    this = TextNode('text', TextType.BOLD)
-    print(this)
+    print(text_node_to_html_node(TextNode('this is some text', TextType.TEXT)))
+    print(text_node_to_html_node(TextNode('this is bold text', TextType.BOLD)))
+    print(text_node_to_html_node(TextNode('this is italic text', TextType.ITALIC)))
+
+
+
+    
 
 if __name__ == "__main__":
     main()
+
