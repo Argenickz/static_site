@@ -15,10 +15,13 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("This is something", TextType.ITALIC)
         node2 = TextNode("This is something else", TextType.TEXT)
         self.assertNotEqual(node, node2)
+        self.assertNotEqual(node.text_type, node2.text_type)
+        self.assertEqual(node.url, None)
 
     def test_types(self):
         bold = TextNode("Bold Text", TextType.BOLD)
         italic = TextNode("Italic Text", TextType.ITALIC)
         self.assertNotEqual(bold.text_type, italic.text_type)
+        
 if __name__ == "__main__":
     unittest.main()
