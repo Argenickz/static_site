@@ -18,7 +18,7 @@ class LeafNode(HTMLNode):
         '<a href="https://www.google.com">Click me!</a>'
 
     def to_html(self):
-        if not self.value:
+        if self.value == None:
             raise ValueError("All leafnodes must have value")
         if self.tag == None:
             return self.value

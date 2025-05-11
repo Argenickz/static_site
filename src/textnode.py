@@ -1,5 +1,5 @@
 from enum import Enum
-
+from leafnode import LeafNode
 # Create an enum called TextType, it should cover all the types of text nodes mentioned in the lesson
 class TextType(Enum):
     TEXT = "TEXT"
@@ -9,7 +9,7 @@ class TextType(Enum):
     LINK = "LINK"
     IMAGE = "IMAGE"
 
-# In textnode.py create a class called TextNode. It should have 3 properties that can be set in the constructor: 
+# In text node.py create a class called TextNode. It should have 3 properties that can be set in the constructor: 
 # self.text (the text content of the node)
 # self.text_type (the type of text this node contains, which is a member of the TextType enum)
 # self.url (the URL of the link or image, if the text is a link. Default to None if nothing is passed in.)
@@ -35,19 +35,46 @@ class TextNode:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
     
 
-# Todo working here
+# Write a function 'text_node_to_html()
+# It should handle each type of TexType enum, if it gets a text node that is none of those types it should raise an exception. Otherwise, it should return a new LeafNode object
+# TextType.Text should return a LeafNode with no tag, just a raw text value
+# TextType.BOLD should return  a LeafNode with a 'b' tag and the text
+# TextType.ITALIC should return a LeafNode with an 'i' tag and the text
+# TextType.CODE 'i' tag, text.
+# TextType.LINK: "a" tag, anchor text, and "href" prop
+# TextType.IMAGE: "img" tag, empty string value, "src" and "alt" props ("src" is the image URL, "alt" is the alt text)
 def text_node_to_html_node(text_node):
     match text_node.text_type:
         case TextType.TEXT:
-            pass
+            return LeafNode(None, text_node.text)
+        case TextType.BOLD:
+            return LeafNode("b", text_node.text)
+        case TextType.ITALIC:
+            return LeafNode("i", text_node.text)
+        case TextType.CODE:
+            return LeafNode("code", text_node.text)
+        case TextType.LINK:
+            return LeafNode("a", text_node.text, {"href":text_node.url})
+        case TextType.IMAGE:
+            return LeafNode("img", '', {"src":text_node.url, "alt":text_node.text})
+        case _:
+            raise Exception("Text type needs to match")
+        
+        # Todo write unit tests tomorrow.
 
 
 
 # debug 
 def main():
-    print(text_node_to_html_node(TextNode('this is some text', TextType.TEXT)))
-    print(text_node_to_html_node(TextNode('this is bold text', TextType.BOLD)))
-    print(text_node_to_html_node(TextNode('this is italic text', TextType.ITALIC)))
+    print(text_node_to_html_node(TextNode('this is some text', TextType.TEXT)).to_html())
+    print(text_node_to_html_node(TextNode('this is bold text', TextType.BOLD)).to_html())
+    print(text_node_to_html_node(TextNode('this is italic text', TextType.ITALIC)).to_html())
+    print(text_node_to_html_node(TextNode('this is code text', TextType.CODE)).to_html())
+    print(text_node_to_html_node(TextNode("this is some anchor text", TextType.LINK, "https://www.google.com")).to_html())
+    print(text_node_to_html_node(TextNode("this is the image description", TextType.IMAGE, "https://www.imgur.com")).to_html())
+    
+    
+
 
 
 
