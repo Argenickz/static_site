@@ -60,26 +60,6 @@ def text_node_to_html_node(text_node):
         case _:
             raise Exception("Text type needs to match")
         
-        # Todo write unit tests tomorrow.
+  
 
-
-
-# debug 
-def main():
-    print(text_node_to_html_node(TextNode('this is some text', TextType.TEXT)).to_html())
-    print(text_node_to_html_node(TextNode('this is bold text', TextType.BOLD)).to_html())
-    print(text_node_to_html_node(TextNode('this is italic text', TextType.ITALIC)).to_html())
-    print(text_node_to_html_node(TextNode('this is code text', TextType.CODE)).to_html())
-    print(text_node_to_html_node(TextNode("this is some anchor text", TextType.LINK, "https://www.google.com")).to_html())
-    print(text_node_to_html_node(TextNode("this is the image description", TextType.IMAGE, "https://www.imgur.com")).to_html())
-    
-    
-
-
-
-
-    
-
-if __name__ == "__main__":
-    main()
 
