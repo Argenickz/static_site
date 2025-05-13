@@ -20,13 +20,55 @@ from textnode import TextNode, TextType
 #`` ]
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     # Create a list to get a hold of the new nodes
+    new_nodes = []
+    # Run a loop for the nodes in the list
     for old_node in old_nodes:
-        print(old_node.text)
+        # If the node type is not a text type just add it to the list as is and skip this iteration
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+
+        # Assign the text of an old node into a variable
+        text = old_node.text
+        # Don't add any text nodes which text is None or the delimiter is not in the text
+        if delimiter not in text:
+            continue
+
+        # Run a while loop with the delimiter as a conditional
+        while delimiter in text:
+            # Get the first split as a list
+            first_split = text.split(delimiter, maxsplit=1)
+            # print(f"this is the first split {first_split}")
+            # Get the value of the first text
+            first_text = first_split[0]
+            # Assign the second part of the text to a variable to check if the delimiter exists in it, if not raise an exception
+            second_text = first_split[1]
+            if delimiter not in second_text:
+                raise Exception("Invalid markdown, no matching closing delimiter")
+            # Get the value of the second split
+            second_split = second_text.split(delimiter, maxsplit=1)
+            # Get the value of the markdown word
+            markdonw = second_split[0]
+            rest = second_split[1]
+            if first_text:
+                new_nodes.append(TextNode(first_text, TextType.TEXT))
+            new_nodes.append(TextNode(markdonw, text_type))
+            text = rest
+
+            
+        if rest:
+            new_nodes.append(TextNode(rest, TextType.TEXT))
+
+    
+    return new_nodes
+
+
+# =======================================================================================
 
 
 
 
 
-test = TextNode("this is a text with a **bolded** word in the middle", TextType.TEXT)
-split_nodes_delimiter([test], "**", TextType.BOLD)
-# 2. Write a bunch of texts for this one, specially tests where there are multiple types of delimiters in the text.
+
+
+
