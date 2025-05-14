@@ -49,13 +49,17 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             second_split = second_text.split(delimiter, maxsplit=1)
             # Get the value of the markdown word
             markdonw = second_split[0]
+            # Assign the second split as the rest of the text
             rest = second_split[1]
+            # Check if the first text is not empty, if not then add it to the nodes list as a TextNode
             if first_text:
                 new_nodes.append(TextNode(first_text, TextType.TEXT))
+            # Add the markdown words with its appropriate text type
             new_nodes.append(TextNode(markdonw, text_type))
+            # assign the test as the rest
             text = rest
 
-            
+        # Check this condition outside of the loop to see if there's more text at the rest
         if rest:
             new_nodes.append(TextNode(rest, TextType.TEXT))
 
