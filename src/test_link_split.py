@@ -68,9 +68,44 @@ class LinkImageSplit(unittest.TestCase):
             [
                 TextNode("text before the link ", TextType.TEXT),
                 TextNode("to royal", TextType.LINK, "https://www.royal.com"),
-                # TextNode(" text after the link", TextType.TEXT)
+                TextNode(" text after the link", TextType.TEXT)
             ],
             link_node
+        )
+
+    def test_no_text_before_link(self):
+        node = TextNode("[to hi 5](https://www.hi5.com) also this", TextType.TEXT)
+        link_node = split_nodes_link([node])
+        self.assertEqual(
+            [
+                TextNode("to hi 5", TextType.LINK, "https://www.hi5.com"),
+                TextNode(" also this", TextType.TEXT)
+            ],
+            link_node
+        )
+    
+    def test_multiple_nodes(self):
+        node1 = TextNode("this is the first [to samsung](https://www.samsung.com)", TextType.TEXT)
+        node2 = TextNode("this is the second [to android](https://www.android.com)", TextType.TEXT)
+        link_node = split_nodes_link([node1, node2])
+        self.assertEqual(
+            [
+                TextNode("this is the first ", TextType.TEXT),
+                TextNode("to samsung", TextType.LINK, "https://www.samsung.com"),
+                TextNode("this is the second ", TextType.TEXT),
+                TextNode("to android", TextType.LINK, "https://www.android.com")
+            ],
+            link_node
+        )
+    
+    def test_different_text_type(self):
+        node = TextNode("this node has a bold text type", TextType.BOLD)
+        link = split_nodes_link([node])
+        self.assertEqual(
+            [
+                TextNode("this node has a bold text type", TextType.BOLD)
+            ],
+            link
         )
 
 
