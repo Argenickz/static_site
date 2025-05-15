@@ -58,10 +58,23 @@ def split_nodes_link(old_nodes):
                 # IF there are no links just add the TextNode as is to the list (Done)
 
                 # Todo check what happens when there is just one link
+                # One link working as expected (Done)
+
                 # Todo check what happens when there are more than two links
+                # Multiple links working as expected (Done)
+
                 # Todo check what happens when there are no text between two links
+                # No text workinf as expected (Done)
+
+                # Todo check what happens when theres just links and no text
+                # Just links and no text working as expected (Done)
+
                 # Todo check what happens when there is text after the link
+                # Text after the link not being added
+
                 # Todo check what happens when there is no text before the links
+
+                # Todo check what happens when there are multiple nodes
             
 
     for x in new_nodes:
@@ -71,17 +84,17 @@ def split_nodes_link(old_nodes):
             
             
             
-# Two links and text
-node1 = TextNode(
-    "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
-    TextType.TEXT,
-)
+# # Two links and text
+# node1 = TextNode(
+#     "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+#     TextType.TEXT,
+# )
 
-# No links
-node2 = TextNode("This text has no links whatsoever", TextType.TEXT)
+# # No links
+# node2 = TextNode("This text has no links whatsoever", TextType.TEXT)
 
-split_nodes_link([node1])
-split_nodes_link([node2])
+# split_nodes_link([node1])
+# split_nodes_link([node2])
 
 # Todo Continue tests tomorrow... git push
 
