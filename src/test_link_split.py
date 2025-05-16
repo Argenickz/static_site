@@ -1,7 +1,7 @@
 import unittest
 from textnode import TextNode, TextType
 from split_images_and_links import split_nodes_link
-
+# Todo check for empty spaces before/after links (make sure no nodes with empty spaces are being added to the list)
 class LinkImageSplit(unittest.TestCase):
     def test_no_links(self):
         node = TextNode("This text has no links whatsoever", TextType.TEXT)
@@ -108,6 +108,15 @@ class LinkImageSplit(unittest.TestCase):
             link
         )
 
+    def test_empty_space_before_and_after_link(self):
+        node = TextNode("   [image](https://www.images.com)   ", TextType.TEXT)
+        link_node = split_nodes_link([node])
+        self.assertEqual(
+            [
+                TextNode("image", TextType.LINK, "https://www.images.com")
+            ],
+            link_node
+        )
 
 
 if __name__ == "__main__":

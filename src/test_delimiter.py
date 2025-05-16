@@ -52,15 +52,18 @@ class TestDelimiter(unittest.TestCase):
         )
 
     def test_different_delimiters(self):
-        node = TextNode("_This is italic_ and **this is bolded**, of course", TextType.TEXT)
+        node = TextNode("_This is italic_ and **this is bolded** also `this is code` of course", TextType.TEXT)
         new_node = split_nodes_delimiter([node], "_", TextType.ITALIC)
         new_node = split_nodes_delimiter(new_node, "**", TextType.BOLD)
+        new_node = split_nodes_delimiter(new_node, "`", TextType.CODE)
         self.assertEqual(
             [
                 TextNode("This is italic", TextType.ITALIC),
                 TextNode(" and ", TextType.TEXT),
                 TextNode("this is bolded", TextType.BOLD),
-                TextNode(", of course", TextType.TEXT)
+                TextNode(" also ", TextType.TEXT),
+                TextNode("this is code", TextType.CODE),
+                TextNode(" of course", TextType.TEXT)
             ],
             new_node
         )

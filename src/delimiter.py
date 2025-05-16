@@ -24,6 +24,10 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     # Run a loop for the nodes in the list
     for old_node in old_nodes:
         # If the node type is not a text type just add it to the list as is and skip this iteration
+
+        if old_node.text_type == TextType.TEXT and delimiter not in old_node.text:
+            new_nodes.append(old_node)
+            continue
         if old_node.text_type != TextType.TEXT:
             new_nodes.append(old_node)
             continue

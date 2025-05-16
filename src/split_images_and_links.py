@@ -37,7 +37,6 @@ def split_nodes_link(old_nodes):
         
         alt_and_link = extract_markdown_links(text)
         if len(alt_and_link) == 0:
-            print("this is the markdown")
             new_nodes.append(old_node)
             continue
         for prop in alt_and_link:
@@ -52,51 +51,19 @@ def split_nodes_link(old_nodes):
 
                 rest = first_split[1]
 
-                if first_text:
+                if first_text.strip():
                     new_nodes.append(TextNode(first_text, TextType.TEXT))
                 new_nodes.append(TextNode(alt_text, TextType.LINK, link))
                 text = rest
-        if rest:
+        if rest.strip():
             new_nodes.append(TextNode(rest, TextType.TEXT))
-                # Todo check what happens if there are no links
-                # IF there are no links just add the TextNode as is to the list (Done)
 
-                # Todo check what happens when there is just one link
-                # One link working as expected (Done)
 
-                # Todo check what happens when there are more than two links
-                # Multiple links working as expected (Done)
-
-                # Todo check what happens when there are no text between two links
-                # No text workinf as expected (Done)
-
-                # Todo check what happens when theres just links and no text
-                # Just links and no text working as expected (Done)
-
-                # Todo check what happens when there is text after the link
-                # Text after the link working as expected
-
-                # Todo check what happens when there is no text before the links
-                # No text before link working as expected
-
-                # Todo check what happens when there are multiple nodes
-                # Multiple nodes working as expected
-            
-
-    for x in new_nodes:
-        print(x)
-    print('\n')
     return new_nodes      
             
-            
-# node = TextNode("text before the link [to royal](https://www.royal.com) text after the link", TextType.TEXT)
-# link = split_nodes_link([node])
-
-# node1 = TextNode("This node has three links [link one](https://www.google.com) number two [link two](https://www.images.com) number three [link three](https://www.linkthree.com)", TextType.TEXT)
-# split_nodes_link([node1])
 
 # !=======================================================================================
-# Todo Finished this function and its tests, start working on the images function and its tests
+
 def split_nodes_images(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
@@ -122,35 +89,11 @@ def split_nodes_images(old_nodes):
 
                 rest = first_split[1]
 
-                if first_text:
+                if first_text.strip():
                     new_nodes.append(TextNode(first_text, TextType.TEXT))
                 new_nodes.append(TextNode(alt_image, TextType.IMAGE, link))
                 text = rest
-        if rest:
+        if rest.strip():
             new_nodes.append(TextNode(rest, TextType.TEXT))
-                # Todo check what happens if there are no links
-
-                # Todo check what happens when there is just one link
-
-                # Todo check what happens when there are more than two links
-
-                # Todo check what happens when there are no text between two links
-
-                # Todo check what happens when theres just links and no text
-
-                # Todo check what happens when there is text after the link
-
-                # Todo check what happens when there is no text before the links
-
-                # Todo check what happens when there are multiple nodes
-            
-
-    for x in new_nodes:
-        print(x)
-    print('\n')
+ 
     return new_nodes
-
-node = TextNode("This is a text with an ![image](https://www.images.com) and a link [second](https://www.second.com)", TextType.TEXT)
-yes = split_nodes_link([node])
-no = split_nodes_images(yes)
-# Todo in the second test suite, make sure to test for images, but also for a combination of images and links plus text...
