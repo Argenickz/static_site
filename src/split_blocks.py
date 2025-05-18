@@ -1,3 +1,4 @@
+from pprint import pprint
 """
 ! Split Blocks
 
@@ -63,21 +64,21 @@ This is a paragraph of text. It has some **bold** and _italic_ words inside it.
 
 """
 
+# Todo very simple version of this, let's run a simple test and see if it passes.
+# Tests pass, review later if needed.
 def markdown_to_blocks(markdown):
-    pass
+    double_line = "\n\n"
+    split_list = markdown.split(double_line)
+    
+    corrected_list = []
+    for block in split_list:
+        stripped = block.rstrip("\n").lstrip("\n")
+        if len(stripped) > 1:
+            
+            corrected_list.append(stripped)    # Remove any empty new lines due to excessive newlines
 
 
-text = """
-This is **bolded** paragraph
 
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
+    pprint(corrected_list)
+    return corrected_list
 
-
-- This is a list
-- with items
-"""
-
-split_list = text.split("\n")
-
-print(split_list)
