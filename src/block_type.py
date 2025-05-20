@@ -1,62 +1,115 @@
 from enum import Enum
 
 class BlockType(Enum):
-    paragraph = "paragraph"
-    heading = "heading"
-    code = "code"
-    quote = "quote"
-    unordered_list = "unordered_list"
-    ordered_list = "ordered_list"
+    PARAGRAPH = "PARAGRAPH"
+    HEADING = "HEADING"
+    CODE = "CODE"
+    QUOTE = "QUOTE"
+    UNORDERED_LIST = "UNORDERED_LIST"
+    ORDERED_LIST = "ORDERED_LIST"
 
-def block_to_blocktype(block):
-# Todo this checks that the heading starts with 1-6 '#' characters, followed by a space and the heading text, if it doesn't start with the pattern or there are more than 6 '#' characters then it is not a heading.
+def block_to_block_type(block):
+# this checks that the HEADING starts with 1-6 '#' characters, followed by a space and the HEADING text, if it doesn't start with the pattern or there are more than 6 '#' characters then it is not a HEADING.
     for number in range(1, 7):
         pattern = ("#" * number) + f" "
         if block.startswith(pattern):
-            print(BlockType.heading)
-            return BlockType.heading
+            print(BlockType.HEADING)
+            return BlockType.HEADING
         
     if block.startswith("```") and block.endswith("```"):
-        print(BlockType.code)
-        return BlockType.code
+        print(BlockType.CODE)
+        return BlockType.CODE
     
     if block.startswith(">"):
-        print(BlockType.quote)
-        return BlockType.quote
+        blocks = block.split("\n")
+        for block in blocks:
+            if not block.startswith(">"):
+                print(BlockType.PARAGRAPH)
+                return BlockType.PARAGRAPH
+        print(BlockType.QUOTE)
+        return BlockType.QUOTE
     
-    # Todo this needs revision, every line in an unordered list block must start with '-' followed by a space, The problem with this condition as it is, is that I can start a paragraph with a '- ' and start a new line with out that pattern and it would be returned as a list instead of a paragraph. Maybe split the block by the new line '\n' and check that each one start with this pattern: '- '
+   
+    # First check if the very first line starts with the pattern
     if block.startswith("- "):
-        print(BlockType.unordered_list)
-        return BlockType.unordered_list
+        # If so split the list into a list of lines to check each for the pattern
+        blocks = block.split("\n")
+        # Run a loop for each item in the list
+        for block in blocks:
+            # If there is at least one of the items that doesn't start with the specified pattern for an unordered list, then the item is a PARAGRAPH
+            if not block.startswith("- "):
+                print(BlockType.PARAGRAPH)
+                return BlockType.PARAGRAPH
+        # Otherwise, the item is an unordered list, what else could it be?
+        print(BlockType.UNORDERED_LIST)
+        return BlockType.UNORDERED_LIST
     
     # Every line in an ordered list block must start with a number followed by a . character and a space. 
     # The number must start with 1 and increment by one for each line.
-    # Todo, for the ordered list take a look at the unordered list thoughts and adjust this one accordingly, I recommend also splitting by the new line '\n' run a range for every item in the list and check that they all start with a set pattern.
-
-    # If none of the conditions are met the block is a normal paragraph
-    print(BlockType.paragraph)
-    return BlockType.paragraph
-
-        
-        
     
-        
+    # Check that the first item start with the pattern
+    if block.startswith("1. "):
+        # If so split the items by the new line
+        blocks = block.split("\n")
+        # Assign an index to check for a pattern
+        index = 1
+        # Run a loop for the items in the list
+        for block in blocks:
+            # If there is an item in the list that doesn't start with the pattern of an ordered list then is a PARAGRAPH
+            if not block.startswith(f"{index}. "):
+                print(BlockType.PARAGRAPH)
+                return BlockType.PARAGRAPH
+            # Increase the index, this increases the number in the ordered list and checks again
+            index += 1
+        # Finally, if they all check out this block is an ordered list.
+        print(BlockType.ORDERED_LIST)
+        return BlockType.ORDERED_LIST
+    # If none of the above conditions are met, the block is a normal PARAGRAPH
+    print(BlockType.PARAGRAPH)
+    return BlockType.PARAGRAPH
 
-heading1 = "## is this a heading?"
-block_to_blocktype(heading1)
-
-code = "```this is some code```"
-not_code = "```this is not code and it doesn't match anything so is a normal paragraph"
-block_to_blocktype(code)
-block_to_blocktype(not_code)
-
-quote = "> this is a quote"
-block_to_blocktype(quote)
-
-listo = "- this is an unordered list"
-block_to_blocktype(listo)
 
 
-paragraph = "this is a normal paragraph"
-block_to_blocktype(paragraph)
+
+# These are some more tests that I ran while making this function.
+def main():
+    ORDERED_LIST = "1. This is item one\n2. This is item two\n3. This is item three"
+    block_to_block_type(ORDERED_LIST)
+    PARAGRAPH = "1. This is not an ordered list because\n2 the second item is missing the (.) in its pattern"
+    block_to_block_type(PARAGRAPH)    
+
+    PARAGRAPH = "- This is actually a PARAGRAPH because\nThe second line doesn't start with the unordered lis pattern"
+    block_to_block_type(PARAGRAPH)
+
+    UNORDERED_LIST = "- This is an actual unordered list, look how\n- This item starts with the pattern\n- This one too"
+    block_to_block_type(UNORDERED_LIST)
+
+
+    heading1 = "## is this a HEADING?"
+    block_to_block_type(heading1)
+
+    CODE = "```this is\nsome CODE```"
+    not_code = "```this is not CODE and it doesn't match anything so is a normal PARAGRAPH"
+    block_to_block_type(CODE)
+    block_to_block_type(not_code)
+
+    QUOTE = "> this is a QUOTE"
+    block_to_block_type(QUOTE)
+
+    listo = "- this is an unordered list"
+    block_to_block_type(listo)
+
+    PARAGRAPH = "this is a normal PARAGRAPH"
+    block_to_block_type(PARAGRAPH)
+
+    quotes = "> this is a QUOTE\n> this is another QUOTE"
+    block_to_block_type(quotes)
+
+    not_quotes = "> this is a QUOTE\nnot really, just a PARAGRAPH"
+    block_to_block_type(not_quotes)
+
+if __name__ == "__main__":
+    main()
+
+
 
