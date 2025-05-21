@@ -1,4 +1,4 @@
-from textnode import TextNode, TextType
+from _1_textnode import TextNode, TextType
 #! Split Delimiter
 # Now that we can convert TextNodes to HTMLNodes, we need to be able to create TextNodes from raw markdown strings. For example, the string:
 # "This is text with a **bolded phrase** in the middle"

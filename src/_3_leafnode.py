@@ -1,4 +1,4 @@
-from htmlnode import HTMLNode
+from _2_htmlnode import HTMLNode
 
 # 1. Create a child class of HTMLNode called LeafNode. Its constructor should differ slightly from the HTMLNode class:
 # . It should not allow for any children

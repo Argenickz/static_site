@@ -1,8 +1,9 @@
 # This is where we'll run our tests for the TextNode class.
 
 import unittest
+from _1_textnode import TextNode, TextType, text_node_to_html_node
 
-from textnode import TextNode, TextType, text_node_to_html_node
+
 
 # Todo Write more cases
 class TestTextNode(unittest.TestCase):

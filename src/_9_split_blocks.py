@@ -19,7 +19,7 @@ This is a paragraph of text. It has some **bold** and _italic_ words inside it.
 - this is a list item
 - This is another list item
 
-The heading, the paragraph, and the unordered list are all separate blocks. Them blank line between them is what separates them.
+The heading, the paragraph, and the unordered list are all separate blocks. The blank line between them is what separates them.
 
 
 !Assignment
@@ -63,22 +63,25 @@ This is a paragraph of text. It has some **bold** and _italic_ words inside it.
         )
 
 """
-
-# Todo very simple version of this, let's run a simple test and see if it passes.
-# Tests pass, review later if needed.
 def markdown_to_blocks(markdown):
+    # split 'delimiter'
     double_line = "\n\n"
+
+    # create a list from the text, of items split at the double line
     split_list = markdown.split(double_line)
-    
+
+    # Create an empty list to catch all the new items
     corrected_list = []
+
+    # Run a loop for all the items
     for block in split_list:
+
+        # Get rid of all the unnecessary empty new lines at the beginning or end of the item text
         stripped = block.rstrip("\n").lstrip("\n")
+
+        # If the item is not empty add it to the final list and return the final list.
         if len(stripped) > 1:
             
-            corrected_list.append(stripped)    # Remove any empty new lines due to excessive newlines
-
-
-
-    pprint(corrected_list)
+            corrected_list.append(stripped) 
     return corrected_list
 

@@ -1,6 +1,6 @@
 import unittest
-from textnode import TextNode, TextType
-from delimiter import split_nodes_delimiter
+from _1_textnode import TextNode, TextType
+from _5_delimiter import split_nodes_delimiter
 class TestDelimiter(unittest.TestCase):
     def test_simple_delimiter(self):
         node = TextNode("This is some text with a **bolded** word", TextType.TEXT)

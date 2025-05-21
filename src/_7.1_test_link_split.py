@@ -1,6 +1,6 @@
 import unittest
-from textnode import TextNode, TextType
-from split_images_and_links import split_nodes_link
+from _1_textnode import TextNode, TextType
+from _7_split_images_and_links import split_nodes_link
 # Todo check for empty spaces before/after links (make sure no nodes with empty spaces are being added to the list)
 class LinkImageSplit(unittest.TestCase):
     def test_no_links(self):

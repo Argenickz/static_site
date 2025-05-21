@@ -1,5 +1,5 @@
-from htmlnode import HTMLNode
-from leafnode import LeafNode
+from _2_htmlnode import HTMLNode
+from _3_leafnode import LeafNode
 # Create a new child class of HTMLNode called ParentNode. Its constructor should differ from HTMLNode in that:
     # . The tag and children arguments are not optional
     # . It doesn't take a value argument

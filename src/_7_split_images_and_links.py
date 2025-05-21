@@ -1,12 +1,12 @@
-from textnode import TextNode, TextType
-from link_image_extractor import extract_markdown_images, extract_markdown_links
+from _1_textnode import TextNode, TextType
+from _6_link_image_extractor import extract_markdown_images, extract_markdown_links
 # ! Split Images and Links
 # Now that we have the extraction functions, we will need to be able to split raw markdown into TextNodes based on images and links.
 
 # Assignment
 # 1. Create two new functions:
 # def split_nodes_image(old_nodes):
-# def split_nides_link(old_node):
+# def split_nodes_link(old_node):
 
 # They should behave very similar to 'split_nodes_delimiter', but obviously don't need a delimiter or a text type as input, because they always operate on images or links respectively. Here's some example usage:
 

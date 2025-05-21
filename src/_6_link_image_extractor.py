@@ -4,7 +4,7 @@ import re
 
 
 #! Assignment
-#1.  Wriite a function, 'extract_markdown_images(text) that takes raw markdown text and returns a lisf of tuples. Each tuple should contain the alt_text and the URL of any markdown images for example:
+#1.  Write a function, 'extract_markdown_images(text) that takes raw markdown text and returns a lisf of tuples. Each tuple should contain the alt_text and the URL of any markdown images for example:
 
 image = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
 # print(extract_markdown_images(text))

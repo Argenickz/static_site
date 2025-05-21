@@ -1,6 +1,6 @@
-from textnode import TextNode, TextType
-from delimiter import split_nodes_delimiter
-from split_images_and_links import split_nodes_images, split_nodes_link
+from _1_textnode import TextNode, TextType
+from _5_delimiter import split_nodes_delimiter
+from _7_split_images_and_links import split_nodes_images, split_nodes_link
 # ! Text to TextNodes
 
 # Tome to put al the 'splitting' functions together into a function that can convert a raw string of markdown-flavored text into a list of TextNode objects.
@@ -35,10 +35,14 @@ def text_to_textnodes(text):
     node = split_nodes_link(node)
     node = split_nodes_images(node)
 
-
+# Todo NOTE: I didn't run any tests for this function, well, the one above should suffice.
    
     return node
 
-test = text_to_textnodes(raw)
-for x in test:
-    print(x)
+
+def main():
+    test = text_to_textnodes(raw)
+    for x in test:
+        print(x)
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,5 @@
 from enum import Enum
-from leafnode import LeafNode
+from _3_leafnode import LeafNode
 # Create an enum called TextType, it should cover all the types of text nodes mentioned in the lesson
 class TextType(Enum):
     TEXT = "TEXT"
