@@ -1,4 +1,5 @@
 from _1_textnode import TextNode, TextType, text_node_to_html_node
+from _4_parentnode import ParentNode
 from _8_text_to_textnodes import text_to_textnodes
 from _9_split_blocks import markdown_to_blocks
 from _10_block_type import block_to_block_type
@@ -62,30 +63,29 @@ FYI: I created an additional 8 helper functions to keep my code neat and easy to
 def markdown_to_html_node(markdown):
     # Split the markdown into blocks (split_blocks)
     markdown_blocks = markdown_to_blocks(markdown)
-    # Loop over each block
-
     node_list = []
+    children_list = []
+    # Loop over each block
     for block in markdown_blocks:
-
+        
         # Determine the type of block (block_type)
         block_type = block_to_block_type(block)
+        
 
         # Check if the code block is a paragraph
         if block_type.PARAGRAPH:
+            # Todo After I determine what type of block type it is, I can always copy the logic into an independent function and just call it indented into the corresponding block type.
             # Use text_to_textnodes to create textnodes with their respective data type
-            node_list.extend(text_to_textnodes(block))
+            children = text_to_textnodes(block.replace("\n", " "))
+            child_list = [text_node_to_html_node(son) for son in children]
+            node_list.append(ParentNode("p", child_list))
+    print(ParentNode("div", node_list).to_html())
+    return ParentNode("div", node_list)
+
+# Todo. The code above works, refactor the whole thing into an independent function, call said function on the condition of the block being a paragraph type.
             
     
-    pprint(node_list)
-    for x in node_list:
-        print(text_node_to_html_node(x).to_html())
-    # Todo, So far this returns a list of text nodes with their respective text and text type. I need to figure out a way of making this into an actual child node, and add it to a parent (div) node, but tomorrow, cause it's too late... maybe textnode_to_html?   run this and take a look at the outcome, this just need a p tag and a div (parentnode) keep on refining tomorrow.
-        
-
-
-
-
-
+# TODO. NEED TO RENAME ALL THE TESTS TO BEGIN WITH TEST, OTHERWISE THE TEST SUITE WON'T REGISTER THEM.
 
 
 #! This
@@ -97,7 +97,8 @@ tag here
 This is another paragraph with _italic_ text and `code` here
 
 """
-markdown_to_html_node(markdown)
+md = markdown_to_html_node(markdown)
+print(f"\n{md.to_html()}")
 
 #! Should output this
 result =   """
@@ -107,5 +108,5 @@ result =   """
 
 # ! Create helper functions here for simplicity.1
 
-
-
+# Use this to eliminate unnecessary new lines from a paragraph?
+# print(markdown.replace('\n', ''))
