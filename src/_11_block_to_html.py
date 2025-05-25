@@ -1,9 +1,10 @@
 from _1_textnode import TextNode, TextType, text_node_to_html_node
 from _4_parentnode import ParentNode
-from _8_text_to_textnodes import text_to_textnodes
+from text_to_textnodes import text_to_textnodes
 from _9_split_blocks import markdown_to_blocks
-from _10_block_type import block_to_block_type
+from _10_block_type import block_to_block_type, BlockType
 from pprint import pprint
+from _3_leafnode import LeafNode
 """
 ! Block to HTML
 
@@ -61,10 +62,17 @@ FYI: I created an additional 8 helper functions to keep my code neat and easy to
 
 # Todo this is just a test run to make sure I understand the logic, once I get it down, we're going to be writing additional helper functions to make the code more readable and concise.
 def markdown_to_html_node(markdown):
+    """paragraphs start and end with (tripe quotes)
+    every item in an ordered list starts with (1. and so on)
+    every item in an unordered list starts with (- and so on)
+    headings can start with one # or more, up so 6 #
+    code starts with ``` and ends with ```
+    quotes start with > for every line
+    """
     # Split the markdown into blocks (split_blocks)
     markdown_blocks = markdown_to_blocks(markdown)
     node_list = []
-    children_list = []
+
     # Loop over each block
     for block in markdown_blocks:
         
@@ -73,40 +81,134 @@ def markdown_to_html_node(markdown):
         
 
         # Check if the code block is a paragraph
-        if block_type.PARAGRAPH:
-            # Todo After I determine what type of block type it is, I can always copy the logic into an independent function and just call it indented into the corresponding block type.
-            # Use text_to_textnodes to create textnodes with their respective data type
-            children = text_to_textnodes(block.replace("\n", " "))
-            child_list = [text_node_to_html_node(son) for son in children]
-            node_list.append(ParentNode("p", child_list))
-    print(ParentNode("div", node_list).to_html())
-    return ParentNode("div", node_list)
+        if block_type == BlockType.PARAGRAPH:
+            # adds the children returned by this function to the list
+            node_list.append(paragraph_to_html(block))
 
-# Todo. The code above works, refactor the whole thing into an independent function, call said function on the condition of the block being a paragraph type.
-            
+        if block_type == BlockType.UNORDERED_LIST:
+            node_list.append(list_to_html(block, "ul"))
+        
+        if block_type == BlockType.ORDERED_LIST:
+            node_list.append(list_to_html(block, "ol"))
+
+        if block_type == BlockType.QUOTE:
+            node_list.append(quote_to_html(block))
+
+        if block_type == BlockType.CODE:
+            node_list.append(code_to_html(block))
+
+        if block_type == BlockType.HEADING:
+            node_list.extend(headings_to_html(block))
     
-# TODO. NEED TO RENAME ALL THE TESTS TO BEGIN WITH TEST, OTHERWISE THE TEST SUITE WON'T REGISTER THEM.
+    # Returns the children in the list under a single 'div' tag
+    return ParentNode("div", node_list)
+            
+# ====================================================================================
+            
+def paragraph_to_html(block):
+    children = text_to_textnodes(block.replace("\n", " "))
+    child_list = [text_node_to_html_node(son) for son in children]
+    return ParentNode("p", child_list)
+# =======================================================================================
+def list_to_html(block, order):
+    blocks = block.split("\n")
+    blocks = list(map(lambda text: text.lstrip("- "), blocks))
+    children = list(map(lambda item: text_to_textnodes(item), blocks))
+    child_list = [text_node_to_html_node(item) for [item] in children]
+    grand_children = list(map(lambda child: ParentNode("li", [child]), child_list))
+    return ParentNode(order, grand_children)
+# =======================================================================================
+def quote_to_html(block):
+    blocks = block.split("\n")
+    blocks = list(map(lambda line: line.replace(">", " "), blocks))
+    children = list(map(lambda item: text_to_textnodes(item), blocks))
+    child_list = [text_node_to_html_node(item) for [item] in children]
+    return ParentNode("blockquote", child_list)
+# =======================================================================================
+# Todo Need to fix this function, it is not necessary to wrap every block in <code> just the whole thing in this pattern: <div><pre><code>Items go here\nWhatever</code></pre></div>
+def code_to_html(block):
+    # Using replace() with a count argument, like 1, will only replace the first instance of a character
+    blocks = block.lstrip("```").rstrip("```").replace("\n", "", 1)
+    blocks = TextNode(blocks, TextType.TEXT)
+    blocks = text_node_to_html_node(blocks)
+    blocks = ParentNode("code", [blocks])
+    return  ParentNode("pre", [blocks])
+    
+# =======================================================================================
+# Todo Forgot the headings!! This is wrong run to see the bug
+def headings_to_html(block):
+    # Use string.count("value") to get the number of '#' characters in the string
+    blocks = block.split("\n")
+    nodes = []
+    count = [block.count("#") for block in blocks]
+    children = list(map(lambda item: text_to_textnodes(item.strip("# ")), blocks))
+    child_list = [text_node_to_html_node(item) for [item] in children]
+    for index in range(len(count)):
+        
+        nodes.append(ParentNode(f"h{str(index + 1)}", [child_list[index]]))
+    return nodes
+        
+    
+    
+    
+    
+    
+    
+# =======================================================================================
+# =======================================================================================
+heading = """
+# This is heading one
+## Number two here
+### This is heading three
+##### Five is where it's at!
+###### Number six is the smallest of the headings
+"""
 
+print(markdown_to_html_node(heading).to_html())
 
-#! This
-markdown = """
+all_together = """
+- coffee
+- milk
+- tea
+- water
+
+>This is a quote of text, I'm
+>not sure what if I'm supposed to add this
+>somewhere
+
 This is a **bolded** paragraph
 text with a p
 tag here
 
 This is another paragraph with _italic_ text and `code` here
 
+1. spaghetti
+2. tomato sauce
+3. salami
+4. onions
+
+```These here are _lines_
+of code because they start and
+end with the **same** pattern
+you just have to pay attention```
+
 """
-md = markdown_to_html_node(markdown)
-print(f"\n{md.to_html()}")
+# def main():
+#     print(markdown_to_html_node(all_together).to_html())
 
-#! Should output this
-result =   """
-<div><p>This is <b>bolded</b> paragraph text in a p tag here</p>
-<p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>"""
+this = """
+```
+some lines
+of python
+```
+"""
+# print(markdown_to_html_node(this).to_html())
+
+# if __name__ == "__main__":
+#     main()
 
 
-# ! Create helper functions here for simplicity.1
 
-# Use this to eliminate unnecessary new lines from a paragraph?
-# print(markdown.replace('\n', ''))
+
+
+

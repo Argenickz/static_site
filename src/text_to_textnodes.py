@@ -44,5 +44,6 @@ def main():
     test = text_to_textnodes(raw)
     for x in test:
         print(x)
+    print(test)
 if __name__ == "__main__":
     main()
