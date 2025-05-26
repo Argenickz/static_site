@@ -100,8 +100,6 @@ def main():
     not_quotes = "> this is a QUOTE\nnot really, just a PARAGRAPH"
     block_to_block_type(not_quotes)
 
-if __name__ == "__main__":
-    main()
-
-
+# if __name__ == "__main__":
+#     main()
 

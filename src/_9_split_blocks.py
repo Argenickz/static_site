@@ -100,4 +100,3 @@ This is another paragraph with _italic_ and `code` text here
 
 if __name__ == "__main__":
     main()
-

@@ -42,7 +42,10 @@ def debug_to_html():
     print(node_with_props.to_html())
 
 
-if __name__=="__main__":
-    debug_to_html()
+# if __name__=="__main__":
+#     debug_to_html()
+
+
+
 
         

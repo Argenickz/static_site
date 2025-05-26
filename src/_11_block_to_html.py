@@ -76,6 +76,7 @@ def markdown_to_html_node(markdown):
     # Loop over each block
     for block in markdown_blocks:
         
+        
         # Determine the type of block (block_type)
         block_type = block_to_block_type(block)
         
@@ -86,10 +87,10 @@ def markdown_to_html_node(markdown):
             node_list.append(paragraph_to_html(block))
 
         if block_type == BlockType.UNORDERED_LIST:
-            node_list.append(list_to_html(block, "ul"))
+            node_list.append(unordered_list_to_html(block))
         
-        if block_type == BlockType.ORDERED_LIST:
-            node_list.append(list_to_html(block, "ol"))
+        # if block_type == BlockType.ORDERED_LIST:
+        #     node_list.append(list_to_html(block, "ol"))
 
         if block_type == BlockType.QUOTE:
             node_list.append(quote_to_html(block))
@@ -102,30 +103,41 @@ def markdown_to_html_node(markdown):
     
     # Returns the children in the list under a single 'div' tag
     return ParentNode("div", node_list)
-            
+    return node_list
+
+
+
+
 # ====================================================================================
             
 def paragraph_to_html(block):
     children = text_to_textnodes(block.replace("\n", " "))
     child_list = [text_node_to_html_node(son) for son in children]
     return ParentNode("p", child_list)
+
 # =======================================================================================
-def list_to_html(block, order):
+# Todo Separate unordered and ordered list for simplicity
+def unordered_list_to_html(block):
     blocks = block.split("\n")
-    blocks = list(map(lambda text: text.lstrip("- "), blocks))
-    children = list(map(lambda item: text_to_textnodes(item), blocks))
-    child_list = [text_node_to_html_node(item) for [item] in children]
-    grand_children = list(map(lambda child: ParentNode("li", [child]), child_list))
-    return ParentNode(order, grand_children)
+
+    text_nodes = [text_to_textnodes(text.lstrip("- ")) for text in blocks]
+    html_nodes = list(map(lambda sublist: list(map(lambda node: text_node_to_html_node(node), sublist)), text_nodes))
+    children = list(map(lambda node: ParentNode("li", node), html_nodes))
+    return ParentNode("ul", children)
 # =======================================================================================
+
+
+# =======================================================================================
+
 def quote_to_html(block):
     blocks = block.split("\n")
     blocks = list(map(lambda line: line.replace(">", " "), blocks))
     children = list(map(lambda item: text_to_textnodes(item), blocks))
     child_list = [text_node_to_html_node(item) for [item] in children]
     return ParentNode("blockquote", child_list)
+
 # =======================================================================================
-# Todo Need to fix this function, it is not necessary to wrap every block in <code> just the whole thing in this pattern: <div><pre><code>Items go here\nWhatever</code></pre></div>
+
 def code_to_html(block):
     # Using replace() with a count argument, like 1, will only replace the first instance of a character
     blocks = block.lstrip("```").rstrip("```").replace("\n", "", 1)
@@ -135,77 +147,26 @@ def code_to_html(block):
     return  ParentNode("pre", [blocks])
     
 # =======================================================================================
-# Todo Forgot the headings!! This is wrong run to see the bug
+
 def headings_to_html(block):
-    # Use string.count("value") to get the number of '#' characters in the string
     blocks = block.split("\n")
     nodes = []
     count = [block.count("#") for block in blocks]
+    print(count)
     children = list(map(lambda item: text_to_textnodes(item.strip("# ")), blocks))
     child_list = [text_node_to_html_node(item) for [item] in children]
     for index in range(len(count)):
         
-        nodes.append(ParentNode(f"h{str(index + 1)}", [child_list[index]]))
-    return nodes
-        
-    
-    
-    
-    
-    
-    
+        nodes.append(ParentNode(f"h{str(count[index])}", [child_list[index]]))
+    return nodes 
 # =======================================================================================
-# =======================================================================================
-heading = """
-# This is heading one
-## Number two here
-### This is heading three
-##### Five is where it's at!
-###### Number six is the smallest of the headings
+md = """
+- This is a list
+- with **bolded** items
+- and  _italic_ items
 """
+print(markdown_to_html_node(md).to_html())
 
-print(markdown_to_html_node(heading).to_html())
-
-all_together = """
-- coffee
-- milk
-- tea
-- water
-
->This is a quote of text, I'm
->not sure what if I'm supposed to add this
->somewhere
-
-This is a **bolded** paragraph
-text with a p
-tag here
-
-This is another paragraph with _italic_ text and `code` here
-
-1. spaghetti
-2. tomato sauce
-3. salami
-4. onions
-
-```These here are _lines_
-of code because they start and
-end with the **same** pattern
-you just have to pay attention```
-
-"""
-# def main():
-#     print(markdown_to_html_node(all_together).to_html())
-
-this = """
-```
-some lines
-of python
-```
-"""
-# print(markdown_to_html_node(this).to_html())
-
-# if __name__ == "__main__":
-#     main()
 
 
 
