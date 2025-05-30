@@ -60,7 +60,7 @@ FYI: I created an additional 8 helper functions to keep my code neat and easy to
 #         "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
 #     )
 
-# Todo this is just a test run to make sure I understand the logic, once I get it down, we're going to be writing additional helper functions to make the code more readable and concise.
+
 def markdown_to_html_node(markdown):
     """paragraphs start and end with (tripe quotes)
     every item in an ordered list starts with (1. and so on)
@@ -71,6 +71,7 @@ def markdown_to_html_node(markdown):
     """
     # Split the markdown into blocks (split_blocks)
     markdown_blocks = markdown_to_blocks(markdown)
+    # print(f'this is the markdown blocks{markdown_blocks}')
     node_list = []
 
     # Loop over each block
@@ -86,11 +87,12 @@ def markdown_to_html_node(markdown):
             # adds the children returned by this function to the list
             node_list.append(paragraph_to_html(block))
 
+        # Todo. Fixed unordered list to correctly parse different types of nodes inside the list items.
         if block_type == BlockType.UNORDERED_LIST:
             node_list.append(unordered_list_to_html(block))
         
-        # if block_type == BlockType.ORDERED_LIST:
-        #     node_list.append(list_to_html(block, "ol"))
+        if block_type == BlockType.ORDERED_LIST:
+            node_list.append(ordered_list_to_html(block))
 
         if block_type == BlockType.QUOTE:
             node_list.append(quote_to_html(block))
@@ -102,6 +104,7 @@ def markdown_to_html_node(markdown):
             node_list.extend(headings_to_html(block))
     
     # Returns the children in the list under a single 'div' tag
+    # print(f'\n\n this is the node list:\n\n{node_list}')
     return ParentNode("div", node_list)
     return node_list
 
@@ -125,16 +128,31 @@ def unordered_list_to_html(block):
     children = list(map(lambda node: ParentNode("li", node), html_nodes))
     return ParentNode("ul", children)
 # =======================================================================================
-
+def ordered_list_to_html(block):
+    # the ordered list is not supposed to have the number and space passed in the markdown string. so '1. this' becomes: '<li>this</li>
+    blocks = block.split("\n")
+    stripped_blocks = []
+    # Use a range to delete the number and space from each item in the list
+    for index in range(len(blocks)):
+        stripped_blocks.append(blocks[index].strip(f"{index + 1}. "))
+    text_nodes = [text_to_textnodes(text) for text in stripped_blocks]
+    html_nodes = list(map(lambda sublist: list(map(lambda node: text_node_to_html_node(node), sublist)), text_nodes))
+    children = list(map(lambda node: ParentNode("li", node), html_nodes))
+    return ParentNode("ol", children)        
 
 # =======================================================================================
 
 def quote_to_html(block):
+    text_nodes = []
+    # print(block)
     blocks = block.split("\n")
-    blocks = list(map(lambda line: line.replace(">", " "), blocks))
-    children = list(map(lambda item: text_to_textnodes(item), blocks))
-    child_list = [text_node_to_html_node(item) for [item] in children]
-    return ParentNode("blockquote", child_list)
+    # print(blocks, '\n')
+    for text in blocks:
+        text_nodes.extend(text_to_textnodes(text.replace("> ", "")))
+    # print(f"text node list: \n{text_nodes}\n")
+    html_nodes = [text_node_to_html_node(item) for item in text_nodes]
+    # print(f"this is the html list\n{html_nodes}")
+    return ParentNode("blockquote", html_nodes)  
 
 # =======================================================================================
 
@@ -147,28 +165,101 @@ def code_to_html(block):
     return  ParentNode("pre", [blocks])
     
 # =======================================================================================
-
+def check_heading(text):
+    """This function checks that the heading is valid and returns a count of the heading"""
+    pattern = ['# ', '## ', '### ', '#### ', '##### ', '###### ']
+    for x in pattern:
+        if text.startswith(x):
+            return len(x.strip())
+    raise Exception('invalid pattern')
+# ! HEADINGS
 def headings_to_html(block):
     blocks = block.split("\n")
+    print(blocks, '\n')
     nodes = []
-    count = [block.count("#") for block in blocks]
-    print(count)
-    children = list(map(lambda item: text_to_textnodes(item.strip("# ")), blocks))
-    child_list = [text_node_to_html_node(item) for [item] in children]
-    for index in range(len(count)):
-        
-        nodes.append(ParentNode(f"h{str(count[index])}", [child_list[index]]))
+    
+    for block in blocks:
+        heading = check_heading(block)
+        text_nodes = text_to_textnodes(block.lstrip("# "))
+        print(f'\nthese are the text nodes:\n{text_nodes}\n')
+        html_nodes = [text_node_to_html_node(node) for node in text_nodes]
+        print(f"\nthese are the html nodes:\n{html_nodes}")
+
+        nodes.append(ParentNode(f"h{heading}", html_nodes))
     return nodes 
 # =======================================================================================
+#! Test unordered list with bolded italic or code inside
+
 md = """
 - This is a list
-- with **bolded** items
-- and  _italic_ items
+- with regular items
+- and  more items
+- also this items
 """
-print(markdown_to_html_node(md).to_html())
+# pprint(markdown_to_html_node(md).to_html())
+# =======================================================================================
+#! Test ordered list with inline markdown
+md1 = """
+1. This is a **bolded** item
+2. item _number_ two
+3. this is `item` number three
 
+"""
+# print(markdown_to_html_node(md1).to_html())
+# =======================================================================================
+# ! Test a paragraph with ordered list
+# =======================================================================================
+md2 = """
+This is a paragraph that checks **inline** text
 
+This is another paragraph
 
+1. This is a list
+2. it is **ordered** by default
+3. it also has _italic_ words and `code` words
+"""
+# print(markdown_to_html_node(md2).to_html())
+# =======================================================================================
+# ! Test ordered list, unordered list, and paragraphs
+md3 = """
+1. This is the firs item
+2. in an **ordered** list
+3. This is the third _item_
+
+This is a paragraph
+
+- This is an unordered list
+- with **bolded** items
+- and _italic_ items
+
+This is the final paragraph
+"""
+# print(markdown_to_html_node(md3).to_html())
+# =======================================================================================
+# Todo Created a function that checks the number or hedings and returns the number corresponding to it. Keep checking for edge cases tomorrow, and run unittests.
+md4 = """
+# This is an h1 with **inline** text
+
+this is a paragraph
+
+## this is an h2
+"""
+print(markdown_to_html_node(md4).to_html())
+# =======================================================================================
+md5 = """
+> This is **a** 
+> blockquote block
+
+This is a paragraph
+"""
+# print(markdown_to_html_node(md5).to_html())
+# =======================================================================================
+# Let's test this edge case
+# This should be passed as alist first right?
+rare = """
+1. **bolded** `strange` _word_
+"""
+# print(markdown_to_html_node(rare).to_html())
 
 
 

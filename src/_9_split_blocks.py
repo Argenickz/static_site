@@ -98,5 +98,5 @@ This is another paragraph with _italic_ and `code` text here
 """
     pprint(markdown_to_blocks(markdown))
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
