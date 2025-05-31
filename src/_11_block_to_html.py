@@ -236,7 +236,7 @@ This is the final paragraph
 """
 # print(markdown_to_html_node(md3).to_html())
 # =======================================================================================
-# Todo Created a function that checks the number or hedings and returns the number corresponding to it. Keep checking for edge cases tomorrow, and run unittests.
+# Todo Created a function that checks the number or headings and returns the number corresponding to it. Keep checking for edge cases tomorrow, and run unittests.
 md4 = """
 # This is an h1 with **inline** text
 
@@ -244,7 +244,7 @@ this is a paragraph
 
 ## this is an h2
 """
-print(markdown_to_html_node(md4).to_html())
+# print(markdown_to_html_node(md4).to_html())
 # =======================================================================================
 md5 = """
 > This is **a** 
