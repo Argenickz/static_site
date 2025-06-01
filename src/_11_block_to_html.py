@@ -146,9 +146,11 @@ def quote_to_html(block):
     text_nodes = []
     # print(block)
     blocks = block.split("\n")
+    # This list comprehension here adds a space at the end of every sentence but the last one to have spaces between.
+    spaced = [string + ' ' if len(blocks) != blocks.index(string) + 1 else string for string in blocks]
     # print(blocks, '\n')
-    for text in blocks:
-        text_nodes.extend(text_to_textnodes(text.replace("> ", "")))
+    for text in spaced:
+        text_nodes.extend(text_to_textnodes(text.lstrip("> ")))
     # print(f"text node list: \n{text_nodes}\n")
     html_nodes = [text_node_to_html_node(item) for item in text_nodes]
     # print(f"this is the html list\n{html_nodes}")
@@ -247,12 +249,15 @@ this is a paragraph
 # print(markdown_to_html_node(md4).to_html())
 # =======================================================================================
 md5 = """
-> This is **a** 
+> This is **a**
 > blockquote block
 
 This is a paragraph
+
+> this block quote
+> should **look** alright _now_
 """
-# print(markdown_to_html_node(md5).to_html())
+print(markdown_to_html_node(md5).to_html())
 # =======================================================================================
 # Let's test this edge case
 # This should be passed as alist first right?
@@ -260,7 +265,4 @@ rare = """
 1. **bolded** `strange` _word_
 """
 # print(markdown_to_html_node(rare).to_html())
-
-
-
 
