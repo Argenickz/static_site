@@ -73,22 +73,48 @@ Run and submit the CLI tests from the root of the project.
 
 
 def copy_content(source, destination):
+    print(f"this is the destination: {destination}")
+
+    print(f'this is the source: {source}')
     # First, delete all the content from the destination directory (public) to ensure a clean copy
     # Before that, let's list all of the items inside the public directory
+    # Todo This works so far but I cant get the public folder to be cleaned...
     public_directory_list = os.listdir(destination)
-    # The code above returns a list, loop though every item in the list, if the item is a file, delete it using os.remove, otherwise is a directory, delete it using shutil.rmtree()
-    # Todo what happens if the list is empty after a recursive call??
-    print(public_directory_list)
+    # print(public_directory_list)
     for item in public_directory_list:
         path = os.path.join(destination, item)
         if os.path.isdir(path):
-            shutil.rmtree(destination, item)
-            print('deleted the dir')
-        print(path)
+            print(f"directory deleted: {path}")
+            shutil.rmtree(path)
+            print("Directory removed successfully")
+        if os.path.isfile(path):
+            os.remove(path)
+            print(f"File deleted: {path}")
+            print("File removed successfully")
+    
+    print('\n')
+    # Let's try and get a hold of all the files and directories in the static directory
+    static_folder = os.listdir(source)
+    for item in static_folder:
+        path = os.path.join(source, item)
+        if os.path.isdir(path):
+            new_path = os.path.join(destination, item)
+            os.mkdir(new_path)
+            print(f"This is the directory path: {path}")
+            copy_content(path, new_path)
+
+        if os.path.isfile(path):
+            shutil.copy(path, destination)
+            print(f"this is the file path: {path}")
+            
+# Todo Continue working on this tomorrow, if we're going to recursively call this, one way I thought of for not having the public directory being deleted at every call is to check if the path exists in said directory, if it does, skip erasing the content of the directory.
+
+
+            
+            
 
 
 origin = "./static"
 destination = "./public"
 
 copy_content(origin, destination)
-# Todo Deleted the whole public dir, reinstate it and try again.
