@@ -177,15 +177,12 @@ def check_heading(text):
 # ! HEADINGS
 def headings_to_html(block):
     blocks = block.split("\n")
-    print(blocks, '\n')
     nodes = []
     
     for block in blocks:
         heading = check_heading(block)
         text_nodes = text_to_textnodes(block.lstrip("# "))
-        print(f'\nthese are the text nodes:\n{text_nodes}\n')
         html_nodes = [text_node_to_html_node(node) for node in text_nodes]
-        print(f"\nthese are the html nodes:\n{html_nodes}")
 
         nodes.append(ParentNode(f"h{heading}", html_nodes))
     return nodes 
@@ -257,7 +254,7 @@ This is a paragraph
 > this block quote
 > should **look** alright _now_
 """
-print(markdown_to_html_node(md5).to_html())
+# print(markdown_to_html_node(md5).to_html())
 # =======================================================================================
 # Let's test this edge case
 # This should be passed as alist first right?

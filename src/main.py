@@ -1,9 +1,7 @@
-from _1_textnode import TextNode, TextType
+from _12_copy_paste_function import copy_content
 
-def main():
-    test = TextNode('this is the text', TextType.TEXT, 'https://wwwthisisatest.com')
-    print(test)
+origin = "./static"
+destination = "./public"
 
-if __name__ == "__main__":
-    main()
+copy_content(origin, destination)
 

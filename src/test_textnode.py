@@ -2,6 +2,7 @@
 
 import unittest
 from _1_textnode import TextNode, TextType, text_node_to_html_node
+from _12_copy_paste_function import extract_title
 
 
 
@@ -42,6 +43,30 @@ class TestTextToHtmlNode(unittest.TestCase):
         self.assertEqual(html_node.tag, 'a')
         self.assertEqual(html_node.props, {"href": "https://www.myproject.com"})
         
+class TestTitleExtractor(unittest.TestCase):
+    def test_title(self):
+        md = """
+# The Great Guitar   
+
+Once there was this guitar...
+"""
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "The Great Guitar"
+        )
+
+    def test_two_titles(self):
+        md = """
+# This is the actual title
+
+# This is not 
+"""
+        title = extract_title(md)
+        self.assertEqual(
+            title,
+            "This is the actual title"
+        )
 
 if __name__ == "__main__":
     unittest.main()

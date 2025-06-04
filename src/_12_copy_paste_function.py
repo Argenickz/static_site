@@ -1,5 +1,7 @@
 import os
 import shutil
+from _11_block_to_html import markdown_to_html_node
+
 """
 ! Copy Static
 We've written a lot of unit tests, it's time to start pulling all the pieces together into a static site generator. Let's work on that main.py that we've been neglecting.
@@ -58,63 +60,91 @@ This is used to remove an entire directory tree, path must point to a directory 
 Run and submit the CLI tests from the root of the project.
 """
 
-# # Let's create a simple function that copies a file from a directory into another directory and deletes the file from the previous directory
-# def copy_and_delete(from_here, to_there):
-#     # First, let's check if the file exists
-#     if os.path.exists(from_here):
-#         shutil.copy(from_here, to_there)
-#         # shutil.rmtree is used to remove entire directories, for single files, is better to use os.remove(file)
-#         os.remove(from_here)
-#         print('success')      
-# origin = "./static/this.txt"
-# destination = "./public"
-# copy_and_delete(origin, destination)
-# Todo the function above is just practice, Let's take a look at a function that we created a while back, that recursively goes into a list of lists, it checks if the item is a list, if it is a list it goes deeper into it (by calling itself recursively) if its a file (or a number) it adds it to a list
-
-
 def copy_content(source, destination):
-    print(f"this is the destination: {destination}")
-
-    print(f'this is the source: {source}')
-    # First, delete all the content from the destination directory (public) to ensure a clean copy
-    # Before that, let's list all of the items inside the public directory
-    # Todo This works so far but I cant get the public folder to be cleaned...
     public_directory_list = os.listdir(destination)
-    # print(public_directory_list)
     for item in public_directory_list:
         path = os.path.join(destination, item)
         if os.path.isdir(path):
-            print(f"directory deleted: {path}")
             shutil.rmtree(path)
-            print("Directory removed successfully")
         if os.path.isfile(path):
             os.remove(path)
-            print(f"File deleted: {path}")
-            print("File removed successfully")
     
-    print('\n')
-    # Let's try and get a hold of all the files and directories in the static directory
     static_folder = os.listdir(source)
     for item in static_folder:
         path = os.path.join(source, item)
         if os.path.isdir(path):
             new_path = os.path.join(destination, item)
             os.mkdir(new_path)
-            print(f"This is the directory path: {path}")
             copy_content(path, new_path)
 
         if os.path.isfile(path):
             shutil.copy(path, destination)
-            print(f"this is the file path: {path}")
-            
-# Todo Continue working on this tomorrow, if we're going to recursively call this, one way I thought of for not having the public directory being deleted at every call is to check if the path exists in said directory, if it does, skip erasing the content of the directory.
+# ========================================================================================
+
+"""
+! Assignment
+1. Create an 'extract title(markdown) function.
+    . It should pull the h1 header from the markdown file and return it.
+    . If there is no h1 header, raise an exception.
+    . 'extract_title(# Hello) should return 'Hello' (strip the # and any leading or trailing whitespaces)
+    . Write some unit tests for it.
+"""
+
+def extract_title(markdown):
+    parts = markdown.split("\n")
+    title = []
+    for line in parts:
+        if line.startswith("# "):
+            title.append(line)
+    if len(title) < 1:
+        raise Exception("There is not a title in this HTML page.")
+    return title[0].lstrip("# ").rstrip(" ")
+# ========================================================================================
+
+"""
+Create a generate_page(from_path, template_path, dest_path) function. It should:
+    1. Print a message like 'Generating page from {from_path} to {dest_path} using {template_path}.
+
+    2. Read the markdown file at 'from_path' and store the contents in a variable.
+
+    3. Read the template file at 'template_path' and store the contents in a variable
+
+    4. Use your 'markdown_to_html_node' function and '.to_html()' method to convert the markdown file to an HTML string.
+
+    .5 Use the extract_title to grab the title of the page.
+
+    6. Replace the {title} and {content} placeholders in the template with the HTML and title you generated.
+
+    7. Write the new full HTML page to a file at 'dest_path'. Be sure to create any necessary directories if they don't exist.
+"""
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    # We'll assume for now, that there is only one HTML file inside the 'from path' directory, if this changes we can then maybe run a loop for every HTML file inside 'from 'path' directory
+    md_file = os.listdir(from_path)[0]
+    path = os.path.join(from_path, md_file)
+    with open(path, 'r') as file:
+        md_content = file.read()
+    print(md_content)
+    
+    with open(template_path, 'r') as file:
+        template_file = file.read()
+        print(template_file)
+
+    html_String = markdown_to_html_node(md_content).to_html()
+    print(html_String)
+    title = extract_title(md_content)
+    print(title)
+
+    
+    
 
 
-            
-            
 
 
-origin = "./static"
-destination = "./public"
 
-copy_content(origin, destination)
+
+source = "./content"
+template = "./template.html"
+
+generate_page(source, template, '')
