@@ -61,6 +61,9 @@ Run and submit the CLI tests from the root of the project.
 """
 
 def copy_content(source, destination):
+    if not os.path.exists(destination):
+        os.mkdir(destination)
+   
     public_directory_list = os.listdir(destination)
     for item in public_directory_list:
         path = os.path.join(destination, item)
@@ -125,26 +128,38 @@ def generate_page(from_path, template_path, dest_path):
     path = os.path.join(from_path, md_file)
     with open(path, 'r') as file:
         md_content = file.read()
-    print(md_content)
     
     with open(template_path, 'r') as file:
         template_file = file.read()
-        print(template_file)
 
     html_String = markdown_to_html_node(md_content).to_html()
-    print(html_String)
     title = extract_title(md_content)
-    print(title)
+
+    full_html = template_file.replace("{{ Title }}", f"{title}", 1).replace("{{ Content }}", f"{html_String}", 1)
+    
+    # Todo, Theres this part of the course that says 'be sure to create any necessary directories if they dont exist. but the public directory in which we're writing the html index to already exists, keep an eye on this, just in case they need to be created. we might need to use os.mkdirs().
+    file_name = "index.html"
+    try:
+        new_directory = os.makedirs(dest_path)
+        file_path = os.path.join(new_directory, file_name)
+        created_html_file = open(file_path, "w")
+        created_html_file.write(full_html)
+        created_html_file.close()
+    except OSError as error:
+        file_path = os.path.join(dest_path, file_name)
+        created_html_file = open(file_path, "w")
+        created_html_file.write(full_html)
+        created_html_file.close()
+
+    
+
+
 
     
     
+    
 
 
 
 
 
-
-source = "./content"
-template = "./template.html"
-
-generate_page(source, template, '')
