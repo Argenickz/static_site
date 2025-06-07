@@ -31,19 +31,6 @@ class LeafNode(HTMLNode):
 
 
 
-def debug_to_html():
-    node = LeafNode("p", "This is a paragraph of text")
-    node_with_props =LeafNode(
-        "a",
-        "This is the link you asked for",
-        {"href": "https://www.google.com"}
-    )
-    print(node.to_html())
-    print(node_with_props.to_html())
-
-
-# if __name__=="__main__":
-#     debug_to_html()
 
 
 

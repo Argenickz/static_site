@@ -160,13 +160,47 @@ def generate_page(from_path, template_path, dest_path):
 
 2. Change your main function to use 'generate_pages_recursive' instead of 'generate_page'. You should generate a page for every markdown file in the content directory and write the  results to the public directory.
 
-3. Run the new program and ensure tha both pages on the site are generated correctly and you can navigate between them.
+3. Run the new program and ensure that both pages on the site are generated correctly and you can navigate between them.
 """
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    print(f"Generating pages from {dir_path_content}\nto {dest_dir_path}\nusing {template_path}\n")
+    
     # 1. list all the items in the content directory
-    item = os.listdir(dir_path_content)
+    items = os.listdir(dir_path_content)
+    # Run a loop for every item in the list
+    for item in items:
+        # create a path with the 'dir_path_content' and the 'item'
+        path = os.path.join(dir_path_content, item)
+
+        if os.path.isfile(path):
+
+            with open(template_path, "r") as temp:
+                template_file = temp.read()
+ 
+            with open(path, "r") as file:
+                md_content = file.read()
+
+            html_string = markdown_to_html_node(md_content).to_html()
+            title = extract_title(md_content)
+            full_html = template_file.replace("{{ Title }}", title, 1).replace("{{ Content }}", html_string)
+            file_path = os.path.join(dest_dir_path, "index.html")
+            created_html = open(file_path, "w")
+            created_html.write(full_html)
+            created_html.close
+            
+
+        # check if the path is a directory
+        if os.path.isdir(path):
+            # create a new path with the 'dest_dir_path' and the item
+            new_path = os.path.join(dest_dir_path, item)
+            # create a directory on that new path
+            os.mkdir(new_path)
+            # call this function recursively to create directories inside dierectories if necessary
+            generate_pages_recursive(path, template_path, new_path)
+            
+            
+
+
     
 
 

@@ -23,10 +23,7 @@ from _7_split_images_and_links import split_nodes_images, split_nodes_link
 #     TextNode("link", TextType.LINK, "https://boot.dev"),
 # ]
 
-raw = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
 
-
-# Todo, This works, will summit and run tests tomorrow, push.
 def text_to_textnodes(text):
     node = TextNode(text, TextType.TEXT)
     node = split_nodes_delimiter([node], "**", TextType.BOLD)
@@ -35,16 +32,6 @@ def text_to_textnodes(text):
     node = split_nodes_link(node)
     node = split_nodes_images(node)
 
-# Todo NOTE: I didn't run any tests for this function, well, the one above should suffice.
    
     return node
-
-
-def main():
-    test = text_to_textnodes(raw)
-    for x in test:
-        print(x)
-    print(test)
-# if __name__ == "__main__":
-#     main()
 

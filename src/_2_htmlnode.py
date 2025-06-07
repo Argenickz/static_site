@@ -34,12 +34,5 @@ class HTMLNode:
     # Create some tests for the HTMLNode, make them in a new file if you'd like.
 
 
-def debug():
-    test = ()
-
-    node = HTMLNode("p", "some text", None, test)
-    print(node)
-if __name__== "__main__":
-    debug()
 
 

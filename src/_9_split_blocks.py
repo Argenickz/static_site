@@ -85,18 +85,4 @@ def markdown_to_blocks(markdown):
             corrected_list.append(stripped) 
     return corrected_list
 
-def main():
-    """This is an example test for reference"""
-    markdown = """
-This is a **bolded** paragraph
 
-This is another paragraph with _italic_ and `code` text here
-
-- This is the first list item in a list block
-- this is a list item
-- This is another list item
-"""
-    pprint(markdown_to_blocks(markdown))
-
-# if __name__ == "__main__":
-#     main()

@@ -26,14 +26,3 @@ class ParentNode(HTMLNode):
         return f"ParentNode(tag: {self.tag}, children: {self.children}, props: {self.props})"
 
 
-def debug_to_html():
-    leaves = [LeafNode("b", "Bold text"),
-            LeafNode(None, "Normal text"),
-            LeafNode("i", "italic text"),
-            LeafNode(None, "Normal text")]
-    node = ParentNode("p", leaves, {"href": "https://www.ham.com"})
-    print(node.to_html())
-    
-
-if __name__ == "__main__":
-    debug_to_html()
