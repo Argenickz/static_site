@@ -8,11 +8,14 @@ template = "./template.html"
 # Right now our site always assumes that / is the root path of the site (e.g. http://localhost:8888/). Make if configurable by:
 
 # In main.py use the sys.argv to grab the first CLI argument to the program. Save it as the basepath. If one isn't provided, default to '/'. 
-basepath = sys.argv[0]
+basepath_list = sys.argv
+if len(basepath_list) > 1:
+    basepath = sys.argv[1]
+else:
+    basepath = "/"
 print(basepath)
 
-
 copy_content(origin, destination)
-# generate_page(content, template, destination)
+# # generate_page(content, template, destination)
 generate_pages_recursive(content, template, destination, basepath)
 
