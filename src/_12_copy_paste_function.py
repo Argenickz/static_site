@@ -163,8 +163,8 @@ def generate_page(from_path, template_path, dest_path):
 3. Run the new program and ensure that both pages on the site are generated correctly and you can navigate between them.
 """
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath="/"):
+    print(f"This is the basepath: {basepath}")
     # 1. list all the items in the content directory
     items = os.listdir(dir_path_content)
     # Run a loop for every item in the list
@@ -182,11 +182,11 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 
             html_string = markdown_to_html_node(md_content).to_html()
             title = extract_title(md_content)
-            full_html = template_file.replace("{{ Title }}", title, 1).replace("{{ Content }}", html_string)
+            full_html = template_file.replace("{{ Title }}", title, 1).replace("{{ Content }}", html_string).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
             file_path = os.path.join(dest_dir_path, "index.html")
             created_html = open(file_path, "w")
             created_html.write(full_html)
-            created_html.close
+            created_html.close()
             
 
         # check if the path is a directory
@@ -195,8 +195,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             new_path = os.path.join(dest_dir_path, item)
             # create a directory on that new path
             os.mkdir(new_path)
-            # call this function recursively to create directories inside dierectories if necessary
-            generate_pages_recursive(path, template_path, new_path)
+            # call this function recursively to create directories inside directories if necessary
+            generate_pages_recursive(path, template_path, new_path, basepath)
             
             
 
