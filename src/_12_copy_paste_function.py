@@ -151,7 +151,26 @@ def generate_page(from_path, template_path, dest_path):
         created_html_file.write(full_html)
         created_html_file.close()
 
+# ========================================================================================
+"""
+! Assignment
+1. Create a 'generate_pages_recursively(dir_path_content, template_path, dest_dir_path) function. It should:
+    1. Crawl every entry in the content directory
+    2. For each markdown file found, generate a new .html file using the same template.html. The generated files should be written to the public directory in the same directory structure.
+
+2. Change your main function to use 'generate_pages_recursive' instead of 'generate_page'. You should generate a page for every markdown file in the content directory and write the  results to the public directory.
+
+3. Run the new program and ensure tha both pages on the site are generated correctly and you can navigate between them.
+"""
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    print(f"Generating pages from {dir_path_content}\nto {dest_dir_path}\nusing {template_path}\n")
+    # 1. list all the items in the content directory
+    item = os.listdir(dir_path_content)
     
+
+
+
 
 
 
