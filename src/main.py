@@ -16,6 +16,5 @@ else:
 print(basepath)
 
 copy_content(origin, destination)
-# # generate_page(content, template, destination)
 generate_pages_recursive(content, template, destination, basepath)
 

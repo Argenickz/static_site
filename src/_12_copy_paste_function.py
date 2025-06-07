@@ -163,7 +163,7 @@ def generate_page(from_path, template_path, dest_path):
 3. Run the new program and ensure that both pages on the site are generated correctly and you can navigate between them.
 """
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath="/"):
     # 1. list all the items in the content directory
     items = os.listdir(dir_path_content)
     # Run a loop for every item in the list
